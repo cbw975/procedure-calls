@@ -20,18 +20,21 @@
         section	.text	              ; The start of the code portion of the program.
 	
 main:                                 ; Called by the C library stub code.
-
 	;; CALL string_length () TO GET THE LENGTH OF THE MESSAGE TO PRINT.
-	
-	
+	mov		rdi, greetings		; pointer to string (1st arg to string_length)
+	sub		rsp, 8				; padding to the stack so rsp % 16 = 0
+	call	string_length		; call string_length (also adds 8 byte address to return to stack)
+	add		rsp, 8				; restore rsp
+
 	;; Use the length provided to print the message.
-	mov	rdx, rax	    ; rdx gets the number of bytes to write.
-	mov     rax, 1              ; rax gets the system call code for "write".
-        mov     rdi, 1              ; rdi gets the file handle for stdout (console).
-        mov     rsi, greetings      ; rsi gets the address of the string below.
-        syscall	                    ; Call kernel, triggering the write.  The registers carry the arguments.
+	mov		rdx, rax			; rdx gets the number of bytes to write.
+	mov     rax, 1				; rax gets the system call code for "write".
+    mov     rdi, 1              ; rdi gets the file handle for stdout (console).
+    mov     rsi, greetings      ; rsi gets the address of the string below.
+    syscall	                    ; Call kernel, triggering the write.  The registers carry the arguments.
 
 	ret		   	    ; End of main().  Stub code will exit the process.
+
 ;;; ----------------------------------------------------------------------------------------
 
 ;;; ----------------------------------------------------------------------------------------
